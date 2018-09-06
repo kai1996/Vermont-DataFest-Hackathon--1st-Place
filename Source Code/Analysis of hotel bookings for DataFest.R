@@ -294,7 +294,7 @@ destination_plot_world <- data %>%
   mutate (srch.destination.latitude <- as.numeric (srch.destination.latitude)) %>%
   mutate (srch.destination.longitude <- as.numeric (srch.destination.longitude)) %>%
   ggplot () +
-  geom_polygon (data=all_world, aes (x=long, y=lat, group = group), colour="black", fill="white") +
+  geom_polygon (data = all_world, aes (x = long, y = lat, group = group), colour = "black", fill = "white") +
   geom_point (aes (x = srch.destination.longitude, y = srch.destination.latitude, color = week))+
   scale_colour_gradient (colours = c ("blue", "white","red", "white", "blue"), name = "Week of the Year") +
   ggtitle ("US Booked Destinations, by Season") +
