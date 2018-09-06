@@ -5,9 +5,6 @@
 ###################################################################################################
 
 
-#Set line size
-options (width<-80)
-
 
                         ################################
                         ######## IMPORTING DATA ########
@@ -29,7 +26,7 @@ library (maps)
 
 #Import data (NOTE: Data files were deleted later due to legal reasons)
 sample.data <- read_tsv ("Downloads/DataFest2017_Data/data_sampled.txt")
-destination.data<- read_tsv ("Downloads/DataFest2017_Data/test.txt")
+destination.data <- read_tsv ("Downloads/DataFest2017_Data/test.txt")
 data <- read_tsv ("Downloads/DataFest2017_Data/data.txt")
 
   
@@ -52,7 +49,7 @@ hourly.customer <- data %>%
  
   #removed missing values
   filter (is.na (trip.length) == FALSE) %>%
-  separate (date.time, into = c ("session.date", "session_time"), sep = " ") %>%
+  separate (date.time, into = c ("session.date", "session.time"), sep = " ") %>%
   
   mutate (
     visit.day.of.week <- weekdays (session.date),
@@ -82,7 +79,7 @@ hourly.customer <- data %>%
   mutate (customer.type <- ifelse (
     
     search.children.count > 0, "Family Trip", customer.type)) %>%
-    separate (session_time, into = c ("h", "m", "s"), sep = ":") %>%
+    separate (session.time, into = c ("h", "m", "s"), sep = ":") %>%
     select (session.date, h,user.id, visit.day.of.week, has.booked, customer.type) %>%
     distinct () %>%
     group_by (h, visit.day.of.week, customer.type) %>%
@@ -100,7 +97,7 @@ hourly.customer <- data %>%
                                                            "Family Trip", 
                                                            "Everyone Else"))) %>%
   
-  mutate (visit.day.of.week <- factor (visit.day.of.week, levels=c ("Sunday",
+  mutate (visit.day.of.week <- factor (visit.day.of.week, levels = c ("Sunday",
                                                                 "Monday",
                                                                 "Tuesday",
                                                                 "Wednesday", 
@@ -137,15 +134,15 @@ plot.hourly.customer <- hourly.customer %>%
 
 plantime.customer <- data %>%
   mutate (visit.day.of.week <- weekdays (date.time)) %>%
-  mutate (trip.length <- srch_co -srch_ci) %>%
+  mutate (trip.length <- srch_co - srch_ci) %>%
   filter (trip.length >= 1) %>%
   mutate (date.of.visit <- as_date (date.time, tz <- NULL)) %>%
   mutate (plan.time <- srch_ci - date.of.visit) %>%
   mutate (na.pt <- is.na (plan.time) == TRUE)%>%
-  mutate (percentageofnull <- mean (na.pt)) %>%
+  mutate (percentage.null <- mean (na.pt)) %>%
   filter (is.na (plan.time) == FALSE) %>%
   mutate (negative.plan.time <- ifelse (plan.time < 0, 1, 0)) %>%
-  mutate (percentageofnegative <- mean (negative.plan.time)) %>%
+  mutate (percentage.negative.plan.time <- mean (negative.plan.time)) %>%
   # Less than3  of obs are negative, so we drop them
   
   mutate (
@@ -189,7 +186,7 @@ plantime.customer <- data %>%
   summarize (booking.visit.count <- n ()) %>%
   filter (has.booked == 1) %>%
   mutate (proportion.booked <- booking.visit.count/number.of.visits) %>%
-  mutate (customer.type <- factor (customer.type, levels  <- c ("Business", 
+  mutate (customer.type <- factor (customer.type, levels = c ("Business", 
                                                            "Weekend Getaway", 
                                                            "Family Trip", 
                                                            "Everyone Else")))
@@ -216,23 +213,22 @@ plot_pt_cust <- plantime.customer %>%
 
 channel.cust.prob <- data %>%
   mutate (visit.day.of.week <- weekdays (date.time)) %>%
-  mutate (trip.length <- srch_co -srch_ci) %>%
+  mutate (trip.length <- srch_co - srch_ci) %>%
   filter (trip.length >= 1) %>%
   mutate (date.of.visit <- as_date (date.time, tz <- NULL)) %>%
   mutate (plan.time <- srch_ci - date.of.visit) %>%
   mutate (na.pt <- is.na (plan.time) == TRUE)%>%
-  mutate (percentageofnull <- mean (na.pt)) %>%
+  mutate (percentage.null <- mean (na.pt)) %>%
   filter (is.na (plan.time) == FALSE) %>%
   mutate (negative.plan.time <- ifelse (plan.time < 0, 1, 0)) %>%
-  mutate (percentageofnegative <- mean (negative.plan.time)) %>%
-  # Less than3  of obs are negative, so we drop them
-  # percentageofnull NA values, we also dr
+  mutate (percentage.negative.plan.time <- mean (negative.plan.time)) %>%
+  
   
   mutate (
     #visit.day.of.week <- weekdays (session.date),
     trip.start.day.of.week <- weekdays (srch_ci),
     trip.end.day.of.week <- weekdays (srch_co),
-    business.rooms <- ifelse (srch_children_cnt ==0 & srch_adults_cnt == 1, 1, 0)) %>%
+    business.rooms <- ifelse (srch_children_cnt == 0 & srch_adults_cnt == 1, 1, 0)) %>%
   
   mutate (customer.type <- ifelse (
     (trip.start.day.of.week == "Monday" |trip.start.day.of.week == "Tuesday" | 
@@ -268,7 +264,7 @@ channel.cust.prob <- data %>%
   filter (has.booked == 1) %>%
   mutate (proportion.booked <- booking.visit.count/number.of.visits) %>%
   ungroup () %>%
-  mutate (customer.type <- factor (customer.type, levels  <- c ("Business", 
+  mutate (customer.type <- factor (customer.type, levels = c ("Business", 
                                                            "Weekend Getaway", 
                                                            "Family Trip", 
                                                            "Everyone Else"))) %>%
