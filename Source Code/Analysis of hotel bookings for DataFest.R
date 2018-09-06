@@ -286,7 +286,7 @@ plot.channel.and.customer.type <- channel.cust.prob %>%
 
 all_world <- map_data ("world")
 
-destination_plot_world <- data %>%
+destination.plot.world <- data %>%
   filter (country.user.located == "UNITED STATES OF AMERICA") %>%
   filter (has.booked == 1) %>%
   mutate (week <- week (srch_ci)) %>%
