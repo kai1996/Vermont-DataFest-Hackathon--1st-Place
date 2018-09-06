@@ -55,7 +55,7 @@ hourly.customer <- data %>%
     visit.day.of.week <- weekdays (session.date),
     trip.start.day.of.week <- weekdays (srch_ci),
     trip.end.day.of.week <- weekdays (srch_co),
-    business.rooms <- ifelse (srch_children_cnt ==0 & srch_adults_cnt == 1, 1, 0)) %>%
+    business.rooms <- ifelse (search.children.count == 0 & srch_adults_cnt == 1, 1, 0)) %>%
   
   mutate (customer.type <- ifelse (
     (trip.start.day.of.week == "Monday" |
@@ -150,7 +150,7 @@ plantime.customer <- data %>%
     visit.day.of.week <- weekdays (session.date),
     trip.start.day.of.week <- weekdays (srch_ci),
     trip.end.day.of.week <- weekdays (srch_co),
-    business.rooms <- ifelse (srch_children_cnt ==0 & srch_adults_cnt == 1, 1, 0)) %>%
+    business.rooms <- ifelse (search.children.count ==0 & srch_adults_cnt == 1, 1, 0)) %>%
   
   mutate (customer.type <- ifelse (
     (trip.start.day.of.week == "Monday" |
@@ -176,7 +176,7 @@ plantime.customer <- data %>%
     search.children.count == 0 &  
     trip.length <= 3, "Weekend Getaway", customer.type)) %>%
   
-  mutate (customer.type <- ifelse (srch_children_cnt > 0, "Family Trip", customer.type)) %>%
+  mutate (customer.type <- ifelse (search.children.count > 0, "Family Trip", customer.type)) %>%
   filter (negative.plan.time == 0) %>%
   select (plan.time, has.booked, date.of.visit, user.id, customer.type) %>%
   distinct () %>%
@@ -228,7 +228,7 @@ channel.cust.prob <- data %>%
     #visit.day.of.week <- weekdays (session.date),
     trip.start.day.of.week <- weekdays (srch_ci),
     trip.end.day.of.week <- weekdays (srch_co),
-    business.rooms <- ifelse (srch_children_cnt == 0 & srch_adults_cnt == 1, 1, 0)) %>%
+    business.rooms <- ifelse (search.children.count == 0 & srch_adults_cnt == 1, 1, 0)) %>%
   
   mutate (customer.type <- ifelse (
     (trip.start.day.of.week == "Monday" |trip.start.day.of.week == "Tuesday" | 
@@ -250,7 +250,7 @@ channel.cust.prob <- data %>%
     search.children.count == 0 &  
     trip.length <= 3, "Weekend Getaway", customer.type)) %>%
  
-  mutate (customer.type <- ifelse (srch_children_cnt > 0, "Family Trip", customer.type)) %>%
+  mutate (customer.type <- ifelse (search.children.count > 0, "Family Trip", customer.type)) %>%
   filter (negative.plan.time == 0) %>%
   
   
@@ -260,7 +260,7 @@ channel.cust.prob <- data %>%
   group_by (channel, customer.type) %>%
   mutate (number.of.visits <- n ()) %>%
   group_by (channel, has.booked, number.of.visits, customer.type) %>%
-  summarize (booking.visit.count<- n ()) %>%
+  summarize (booking.visit.count <- n ()) %>%
   filter (has.booked == 1) %>%
   mutate (proportion.booked <- booking.visit.count/number.of.visits) %>%
   ungroup () %>%
